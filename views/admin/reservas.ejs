@@ -1,0 +1,46 @@
+<%- include('../parciales/cabecera') %>
+<h1>Administración de reservas</h1>
+<p class="subtitulo">Listado de todas las reservas del sistema.</p>
+
+<% if (reservas.length === 0) { %>
+  <p class="vacio">No hay reservas registradas.</p>
+<% } else { %>
+  <div class="tabla-contenedor">
+    <table>
+      <thead>
+        <tr>
+          <th>N.º</th>
+          <th>Usuario</th>
+          <th>Equipo</th>
+          <th>Fecha</th>
+          <th>Turno</th>
+          <th>Estado</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for (const reserva of reservas) { %>
+          <tr>
+            <td><%= reserva.id %></td>
+            <td><%= reserva.nombreUsuario %></td>
+            <td><strong><%= reserva.codigoEquipo %></strong></td>
+            <td><%= helpers.formatearFecha(reserva.fecha) %></td>
+            <td><%= helpers.etiquetaTurno(reserva.turno) %></td>
+            <td><span class="etiqueta etiqueta-<%= reserva.estado %>"><%= helpers.etiquetaEstado(reserva.estado) %></span></td>
+            <td>
+              <% if (reserva.puedeCancelar) { %>
+                <form action="/admin/reservas/<%= reserva.id %>/cancelar" method="post">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                  <button type="submit" class="boton boton-peligro boton-pequeno">Cancelar</button>
+                </form>
+              <% } else { %>
+                <span class="texto-ayuda">—</span>
+              <% } %>
+            </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+<% } %>
+<%- include('../parciales/pie') %>

@@ -1,0 +1,10 @@
+<% if (errores.length > 0) { %>
+  <div class="aviso aviso-error" role="alert">
+    <p><strong>Revisa los datos enviados:</strong></p>
+    <ul>
+      <% for (const error of errores) { %>
+        <li><%= error %></li>
+      <% } %>
+    </ul>
+  </div>
+<% } %>

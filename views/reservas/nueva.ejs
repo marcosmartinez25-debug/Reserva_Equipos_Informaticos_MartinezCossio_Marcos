@@ -1,0 +1,47 @@
+<%- include('../parciales/cabecera') %>
+<h1><%= vm.titulo %></h1>
+<%- include('../parciales/errores', { errores: vm.errores }) %>
+
+<section class="tarjeta">
+  <h2>1. Elige fecha y turno</h2>
+  <form class="fila-formulario" action="/reservas/nueva" method="get">
+    <div>
+      <label for="fecha">Fecha</label>
+      <input id="fecha" name="fecha" type="date" value="<%= vm.fecha %>" min="<%= vm.fechaMinima %>" required>
+    </div>
+    <div>
+      <label for="turno">Turno</label>
+      <select id="turno" name="turno" required>
+        <% for (const opcion of vm.turnos) { %>
+          <option value="<%= opcion.valor %>" <%= opcion.seleccionado ? 'selected' : '' %>><%= opcion.texto %></option>
+        <% } %>
+      </select>
+    </div>
+    <button type="submit" class="boton boton-secundario">Ver equipos disponibles</button>
+  </form>
+</section>
+
+<section class="tarjeta">
+  <h2>2. Elige el equipo</h2>
+  <% if (!vm.consultaValida) { %>
+    <p class="vacio">Selecciona una fecha y un turno válidos para ver los equipos disponibles.</p>
+  <% } else if (!vm.puedeReservar) { %>
+    <p class="vacio">No quedan equipos disponibles para el <%= vm.resumen %>.</p>
+  <% } else { %>
+    <p>Equipos disponibles para el <strong><%= vm.resumen %></strong>:</p>
+    <form action="/reservas" method="post">
+      <input type="hidden" name="_csrf" value="<%= vm.csrfToken %>">
+      <input type="hidden" name="fecha" value="<%= vm.fecha %>">
+      <input type="hidden" name="turno" value="<%= vm.turno %>">
+      <label for="equipoId">Equipo</label>
+      <select id="equipoId" name="equipoId" required>
+        <option value="">Selecciona un equipo</option>
+        <% for (const opcion of vm.equipos) { %>
+          <option value="<%= opcion.valor %>" <%= opcion.seleccionado ? 'selected' : '' %>><%= opcion.texto %></option>
+        <% } %>
+      </select>
+      <button type="submit" class="boton">Confirmar reserva</button>
+    </form>
+  <% } %>
+</section>
+<%- include('../parciales/pie') %>

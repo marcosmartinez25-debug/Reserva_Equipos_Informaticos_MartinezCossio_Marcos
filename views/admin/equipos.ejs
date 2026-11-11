@@ -1,0 +1,66 @@
+<%- include('../parciales/cabecera') %>
+<h1>Administración de equipos</h1>
+
+<section class="tarjeta">
+  <h2>Añadir equipo</h2>
+  <%- include('../parciales/errores', { errores }) %>
+  <form class="fila-formulario" action="/admin/equipos" method="post">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div>
+      <label for="codigo">Código</label>
+      <input id="codigo" name="codigo" type="text" value="<%= valores.codigo %>" placeholder="PC-003" maxlength="15" required>
+    </div>
+    <div>
+      <label for="nombre">Nombre</label>
+      <input id="nombre" name="nombre" type="text" value="<%= valores.nombre %>" placeholder="Ordenador aula 3" maxlength="60" required>
+    </div>
+    <div>
+      <label for="tipo">Tipo</label>
+      <select id="tipo" name="tipo">
+        <option value="sobremesa" <%= valores.tipo === 'sobremesa' ? 'selected' : '' %>>Sobremesa</option>
+        <option value="portatil" <%= valores.tipo === 'portatil' ? 'selected' : '' %>>Portátil</option>
+      </select>
+    </div>
+    <button type="submit" class="boton">Añadir</button>
+  </form>
+</section>
+
+<section class="tarjeta">
+  <h2>Equipos del centro</h2>
+  <div class="tabla-contenedor">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Código</th>
+          <th>Nombre</th>
+          <th>Tipo</th>
+          <th>Estado actual</th>
+          <th>Cambiar estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for (const equipo of equipos) { %>
+          <tr>
+            <td><%= equipo.id %></td>
+            <td><strong><%= equipo.codigo %></strong></td>
+            <td><%= equipo.nombre %></td>
+            <td><%= helpers.etiquetaTipo(equipo.tipo) %></td>
+            <td><span class="etiqueta etiqueta-<%= equipo.estado %>"><%= helpers.etiquetaEstado(equipo.estado) %></span></td>
+            <td>
+              <form class="form-en-linea" action="/admin/equipos/<%= equipo.id %>/estado" method="post">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <select name="estado" aria-label="Nuevo estado de <%= equipo.codigo %>">
+                  <option value="operativo" <%= equipo.estado === 'operativo' ? 'selected' : '' %>>Operativo</option>
+                  <option value="fuera_de_servicio" <%= equipo.estado === 'fuera_de_servicio' ? 'selected' : '' %>>Fuera de servicio</option>
+                </select>
+                <button type="submit" class="boton boton-secundario boton-pequeno">Guardar</button>
+              </form>
+            </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+</section>
+<%- include('../parciales/pie') %>

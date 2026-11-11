@@ -1,0 +1,24 @@
+<%- include('../parciales/cabecera') %>
+<h1>Mi perfil</h1>
+<div class="dos-columnas">
+  <section class="tarjeta">
+    <h2>Datos de la cuenta</h2>
+    <dl class="datos">
+      <dt>Nombre</dt>
+      <dd><%= usuario.nombre %></dd>
+      <dt>Correo</dt>
+      <dd><%= usuario.email %></dd>
+      <dt>Rol</dt>
+      <dd><span class="etiqueta etiqueta-rol"><%= usuario.rol %></span></dd>
+      <dt>Tipo preferido</dt>
+      <dd><%= tipoPreferido ? helpers.etiquetaTipo(tipoPreferido) : 'Sin preferencia' %></dd>
+    </dl>
+  </section>
+  <section class="tarjeta resumen">
+    <h2>Reservas activas</h2>
+    <p class="numero-grande"><%= reservasActivas %></p>
+    <a class="boton" href="/reservas/nueva">Nueva reserva</a>
+    <a class="boton boton-secundario" href="/mis-reservas">Ver mis reservas</a>
+  </section>
+</div>
+<%- include('../parciales/pie') %>

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= titulo %> | Reserva de equipos</title>
+  <link rel="stylesheet" href="/css/estilos.css">
+</head>
+<body>
+  <header class="cabecera">
+    <div class="contenedor cabecera-contenido">
+      <a class="logo" href="/equipos">💻 ReservaEquipos</a>
+      <nav class="menu">
+        <a href="/equipos">Equipos</a>
+        <% if (locals.usuarioActual) { %>
+          <a href="/reservas/nueva">Nueva reserva</a>
+          <a href="/mis-reservas">Mis reservas</a>
+          <% if (usuarioActual.rol === 'admin') { %>
+            <a href="/admin/equipos">Admin equipos</a>
+            <a href="/admin/reservas">Admin reservas</a>
+          <% } %>
+          <a href="/perfil">Perfil</a>
+          <form class="form-logout" action="/logout" method="post">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button type="submit" class="boton boton-secundario boton-pequeno">Salir (<%= usuarioActual.nombre %>)</button>
+          </form>
+        <% } else { %>
+          <a href="/login">Iniciar sesión</a>
+          <a href="/registro" class="boton boton-pequeno">Registrarse</a>
+        <% } %>
+      </nav>
+    </div>
+  </header>
+  <main class="contenedor">
+    <%- include('avisos') %>

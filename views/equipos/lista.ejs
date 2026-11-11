@@ -1,0 +1,62 @@
+<%- include('../parciales/cabecera') %>
+<h1>Catálogo de equipos</h1>
+<p class="subtitulo">Consulta los equipos del centro. Para reservar uno tienes que iniciar sesión.</p>
+
+<div class="dos-columnas">
+  <form class="tarjeta filtros" action="/equipos" method="get">
+    <h2>Filtrar</h2>
+    <label for="tipo">Tipo</label>
+    <select id="tipo" name="tipo">
+      <option value="todos" <%= filtros.tipo === 'todos' ? 'selected' : '' %>>Todos</option>
+      <option value="sobremesa" <%= filtros.tipo === 'sobremesa' ? 'selected' : '' %>>Sobremesa</option>
+      <option value="portatil" <%= filtros.tipo === 'portatil' ? 'selected' : '' %>>Portátil</option>
+    </select>
+    <label class="check">
+      <input type="checkbox" name="operativos" value="true" <%= filtros.operativos ? 'checked' : '' %>>
+      Solo operativos
+    </label>
+    <button type="submit" class="boton">Aplicar filtros</button>
+  </form>
+
+  <form class="tarjeta filtros" action="/preferencias" method="post">
+    <h2>Tipo preferido</h2>
+    <p class="texto-ayuda">Se guarda en una cookie y se usa como filtro inicial del catálogo.</p>
+    <label for="tipoPreferido">Prefiero</label>
+    <select id="tipoPreferido" name="tipo">
+      <option value="ninguno" <%= !tipoPreferido ? 'selected' : '' %>>Sin preferencia</option>
+      <option value="sobremesa" <%= tipoPreferido === 'sobremesa' ? 'selected' : '' %>>Sobremesa</option>
+      <option value="portatil" <%= tipoPreferido === 'portatil' ? 'selected' : '' %>>Portátil</option>
+    </select>
+    <button type="submit" class="boton boton-secundario">Guardar preferencia</button>
+  </form>
+</div>
+
+<% if (equipos.length === 0) { %>
+  <p class="vacio">No hay equipos que cumplan los filtros.</p>
+<% } else { %>
+  <div class="tabla-contenedor">
+    <table>
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Nombre</th>
+          <th>Tipo</th>
+          <th>Estado</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for (const equipo of equipos) { %>
+          <tr>
+            <td><strong><%= equipo.codigo %></strong></td>
+            <td><%= equipo.nombre %></td>
+            <td><%= helpers.etiquetaTipo(equipo.tipo) %></td>
+            <td><span class="etiqueta etiqueta-<%= equipo.estado %>"><%= helpers.etiquetaEstado(equipo.estado) %></span></td>
+            <td><a href="/equipos/<%= equipo.id %>">Ver ficha</a></td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+<% } %>
+<%- include('../parciales/pie') %>

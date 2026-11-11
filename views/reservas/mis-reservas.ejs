@@ -1,0 +1,44 @@
+<%- include('../parciales/cabecera') %>
+<h1>Mis reservas</h1>
+<p><a class="boton" href="/reservas/nueva">+ Nueva reserva</a></p>
+
+<% if (reservas.length === 0) { %>
+  <p class="vacio">Todavía no tienes reservas.</p>
+<% } else { %>
+  <div class="tabla-contenedor">
+    <table>
+      <thead>
+        <tr>
+          <th>N.º</th>
+          <th>Equipo</th>
+          <th>Fecha</th>
+          <th>Turno</th>
+          <th>Estado</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for (const reserva of reservas) { %>
+          <tr>
+            <td><%= reserva.id %></td>
+            <td><strong><%= reserva.codigoEquipo %></strong> · <%= reserva.nombreEquipo %></td>
+            <td><%= helpers.formatearFecha(reserva.fecha) %></td>
+            <td><%= helpers.etiquetaTurno(reserva.turno) %></td>
+            <td><span class="etiqueta etiqueta-<%= reserva.estado %>"><%= helpers.etiquetaEstado(reserva.estado) %></span></td>
+            <td>
+              <% if (reserva.puedeCancelar) { %>
+                <form action="/reservas/<%= reserva.id %>/cancelar" method="post">
+                  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                  <button type="submit" class="boton boton-peligro boton-pequeno">Cancelar</button>
+                </form>
+              <% } else { %>
+                <span class="texto-ayuda">—</span>
+              <% } %>
+            </td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+<% } %>
+<%- include('../parciales/pie') %>

@@ -1,0 +1,24 @@
+$ npm run check:ts
+
+> reserva-equipos-informaticos@1.0.0 check:ts
+> tsc --noEmit
+
+$ npm run build:ts
+
+> reserva-equipos-informaticos@1.0.0 build:ts
+> tsc
+
+$ npm run demo:ts
+
+> reserva-equipos-informaticos@1.0.0 demo:ts
+> node dist/demo.js
+
+Disponibles el 15/01/2027 por la mañana: PORT-001
+OK    Ana reserva PORT-001 el 15/01/2027 por la mañana
+ERROR Luis intenta reservar PORT-001 en el mismo turno -> YA_RESERVADO: El equipo ya está reservado para esa fecha y turno.
+ERROR Luis intenta reservar PC-002 (fuera de servicio) -> NO_OPERATIVO: El equipo está fuera de servicio.
+ERROR Luis intenta usar un turno inválido -> DATOS_INVALIDOS: El turno debe ser mañana o tarde.
+ERROR Luis intenta cancelar la reserva 1 de Ana -> SIN_PERMISO: No puedes cancelar una reserva de otro usuario.
+OK    Ana cancela su reserva 1
+OK    Luis reserva PC-001 tras la cancelación
+Reservas de Ana: 1:cancelada, 2:activa

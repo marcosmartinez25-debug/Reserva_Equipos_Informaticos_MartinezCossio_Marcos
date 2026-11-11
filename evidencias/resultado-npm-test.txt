@@ -1,0 +1,42 @@
+$ npm test
+
+ RUN  v5.1.0 C:/Users/IServicioTco/Documents/Reserva_Equipos_Informaticos_MartinezCossio_Marcos
+
+ ✓ tests/funciones.test.js > Funciones de reservas > estaReservado solo tiene en cuenta las reservas activas 1ms
+ ✓ tests/funciones.test.js > Funciones de reservas > obtenerEquiposDisponibles quita los reservados y los fuera de servicio 0ms
+ ✓ tests/funciones.test.js > Funciones de reservas > validarReserva detecta los campos incorrectos 1ms
+ ✓ tests/funciones.test.js > Funciones de reservas > esFechaValida rechaza fechas que no existen 0ms
+ ✓ tests/funciones.test.js > Configuración > acepta una configuración correcta 0ms
+ ✓ tests/funciones.test.js > Configuración > rechaza valores incorrectos al arrancar 1ms
+ ✓ tests/servicioReservas.test.ts > ServicioReservas en TypeScript > crea una reserva y rechaza la duplicada 2ms
+ ✓ tests/servicioReservas.test.ts > ServicioReservas en TypeScript > rechaza equipos fuera de servicio y turnos inválidos 0ms
+ ✓ tests/servicioReservas.test.ts > ServicioReservas en TypeScript > solo permite cancelar las reservas propias y libera el turno 0ms
+ ✓ tests/app.test.js > Registro e inicio de sesión > 1. registra un usuario válido y después puede iniciar sesión 145ms
+ ✓ tests/app.test.js > Registro e inicio de sesión > rechaza el registro con un correo duplicado o datos incorrectos 6ms
+ ✓ tests/app.test.js > Registro e inicio de sesión > 2. rechaza credenciales incorrectas con el mismo mensaje exista o no el correo 49ms
+ ✓ tests/app.test.js > Registro e inicio de sesión > regenera el identificador de sesión al iniciar sesión 91ms
+ ✓ tests/app.test.js > Registro e inicio de sesión > limita los intentos de inicio de sesión fallidos 23ms
+ ✓ tests/app.test.js > Rutas privadas y roles > 3. redirige al login a un visitante anónimo 6ms
+ ✓ tests/app.test.js > Rutas privadas y roles > 4. permite acceder al perfil con una sesión iniciada 51ms
+ ✓ tests/app.test.js > Rutas privadas y roles > 5. rechaza con 403 una operación de administrador hecha por un usuario normal 63ms
+ ✓ tests/app.test.js > Rutas privadas y roles > permite al administrador gestionar equipos y reservas 73ms
+ ✓ tests/app.test.js > Reservas > 6. crea una reserva válida y aplica el patrón PRG 59ms
+ ✓ tests/app.test.js > Reservas > 7. rechaza con 409 una reserva duplicada para el mismo equipo, fecha y turno 51ms
+ ✓ tests/app.test.js > Reservas > valida los datos de la reserva en el servidor 59ms
+ ✓ tests/app.test.js > Reservas > una reserva cancelada no impide reservar el mismo equipo, fecha y turno 52ms
+ ✓ tests/app.test.js > Reservas > permite cancelar una reserva propia sin borrarla 52ms
+ ✓ tests/app.test.js > Reservas > 8. impide cancelar la reserva de otro usuario aunque se cambie el id 102ms
+ ✓ tests/app.test.js > CSRF, logout y cookies > 9. rechaza un cambio de estado sin token CSRF válido 53ms
+ ✓ tests/app.test.js > CSRF, logout y cookies > 10. invalida la sesión después del logout 52ms
+ ✓ tests/app.test.js > CSRF, logout y cookies > el logout sin token CSRF no cierra la sesión 52ms
+ ✓ tests/app.test.js > CSRF, logout y cookies > guarda el tipo preferido en una cookie y lo usa como filtro inicial 6ms
+ ✓ tests/app.test.js > CSRF, logout y cookies > una cookie de preferencia manipulada no da permisos ni rompe el catálogo 3ms
+ ✓ tests/app.test.js > Catálogo y errores > filtra los equipos por tipo y estado 7ms
+ ✓ tests/app.test.js > Catálogo y errores > muestra la ficha de un equipo y devuelve 404 o 400 cuando corresponde 7ms
+ ✓ tests/app.test.js > Catálogo y errores > escapa el contenido introducido por los usuarios 51ms
+
+ Test Files  3 passed (3)
+      Tests  32 passed (32)
+   Start at  13:00:51
+   Duration  1.50s (tests 77%, import 19%, transform 3%, worker 1%)
+

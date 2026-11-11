@@ -1,0 +1,94 @@
+Salida real de los ejemplos curl ejecutados contra 'npm start' (Git Bash, 07/11/2026 13:00)
+
+$ curl -s -o /dev/null -w '%{http_code}' "http://localhost:3000/equipos?tipo=portatil&operativos=true"
+    -> HTTP 200
+    <strong>PORT-001</strong>
+    <strong>PORT-002</strong>
+
+$ curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/equipos/1
+    -> HTTP 200
+
+$ curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/equipos/99
+    -> HTTP 404
+
+$ curl -s -c preferencias.txt -o /dev/null -w '%{http_code}' -d 'tipo=portatil' http://localhost:3000/preferencias
+    -> HTTP 303
+    cookie guardada: tipoPreferido=portatil
+
+$ curl -s -c cookies.txt -b cookies.txt -o /dev/null -w '%{http_code} %{redirect_url}' -d 'nombre=Marta López&email=marta@example.com&password=marta12345&password2=marta12345' http://localhost:3000/registro
+    -> HTTP 303 http://localhost:3000/login
+
+$ curl -s -o /dev/null -w '%{http_code}' -d 'email=ana@example.com&password=mala' http://localhost:3000/login
+    -> HTTP 401
+
+$ curl -s -o /dev/null -w '%{http_code} %{redirect_url}' http://localhost:3000/perfil
+    -> HTTP 303 http://localhost:3000/login
+
+$ curl -s -c cookies.txt -b cookies.txt -o /dev/null -w '%{http_code} %{redirect_url}' -d 'email=ana@example.com&password=ana12345' http://localhost:3000/login
+    -> HTTP 303 http://localhost:3000/perfil
+
+$ CSRF=$(curl -s -b cookies.txt http://localhost:3000/perfil | grep -o 'name="_csrf" value="[^"]*"' | head -1 | cut -d'"' -f4)
+    CSRF obtenido: 483d40e9638e... (64 caracteres)
+
+$ curl -s -b cookies.txt -o /dev/null -w '%{http_code}' http://localhost:3000/perfil
+    -> HTTP 200
+
+$ curl -s -b cookies.txt "http://localhost:3000/reservas/nueva?fecha=2027-01-15&turno=manana"  (opciones del select)
+    equipoId= Selecciona un equipo
+    equipoId=2 PORT-001 - Portátil Lenovo (Portátil)
+    equipoId=4 PORT-002 - Portátil HP (Portátil)
+
+$ curl -s -b cookies.txt -c cookies.txt -o /dev/null -w '%{http_code} %{redirect_url}' -d "_csrf=$CSRF&equipoId=2&fecha=2027-01-15&turno=manana" http://localhost:3000/reservas
+    -> HTTP 303 http://localhost:3000/mis-reservas
+
+$ curl -s -b cookies.txt -o /dev/null -w '%{http_code}' -d "_csrf=$CSRF&equipoId=2&fecha=2027-01-15&turno=manana" http://localhost:3000/reservas   (repetida)
+    -> HTTP 409
+
+$ curl -s -b cookies.txt -o /dev/null -w '%{http_code}' -d "_csrf=$CSRF&equipoId=1&fecha=2020-01-01&turno=manana" http://localhost:3000/reservas   (fecha pasada)
+    -> HTTP 400
+
+$ curl -s -b cookies.txt -o /dev/null -w '%{http_code}' -d 'equipoId=1&fecha=2027-02-01&turno=tarde' http://localhost:3000/reservas   (sin token CSRF)
+    -> HTTP 403
+
+$ curl -s -b cookies.txt http://localhost:3000/mis-reservas  (filas de la tabla)
+    N.º Equipo Fecha Turno Estado Acción 
+    3 PORT-001 · Portátil Lenovo 20/01/2027 Mañana Cancelada — 
+    1 PC-001 · Ordenador aula 1 15/01/2027 Mañana Activa Cancelar 
+    4 PORT-001 · Portátil Lenovo 15/01/2027 Mañana Activa Cancelar 
+
+$ curl -s -b cookies.txt -o /dev/null -w '%{http_code}' -d "_csrf=$CSRF" http://localhost:3000/reservas/2/cancelar   (reserva de Luis)
+    -> HTTP 403
+
+$ curl -s -b cookies.txt -c cookies.txt -o /dev/null -w '%{http_code} %{redirect_url}' -d "_csrf=$CSRF" http://localhost:3000/reservas/1/cancelar
+    -> HTTP 303 http://localhost:3000/mis-reservas
+
+$ curl -s -b cookies.txt -o /dev/null -w '%{http_code}' http://localhost:3000/admin/equipos   (Ana no es admin)
+    -> HTTP 403
+
+$ curl -s -b cookies.txt -c cookies.txt -o /dev/null -w '%{http_code} %{redirect_url}' -d "_csrf=$CSRF" http://localhost:3000/logout
+    -> HTTP 303 http://localhost:3000/login
+
+$ curl -s -b cookies.txt -o /dev/null -w '%{http_code} %{redirect_url}' http://localhost:3000/perfil   (después del logout)
+    -> HTTP 303 http://localhost:3000/login
+
+$ curl -s -c admin.txt -b admin.txt -o /dev/null -w '%{http_code}' -d 'email=admin@example.com&password=admin1234' http://localhost:3000/login
+    -> HTTP 303
+    CSRF_ADMIN obtenido desde /admin/equipos (64 caracteres)
+
+$ curl -s -b admin.txt -c admin.txt -o /dev/null -w '%{http_code} %{redirect_url}' -d "_csrf=$CSRF_ADMIN&codigo=PC-003&nombre=Ordenador aula 3&tipo=sobremesa" http://localhost:3000/admin/equipos
+    -> HTTP 303 http://localhost:3000/admin/equipos
+
+$ curl -s -b admin.txt -c admin.txt -o /dev/null -w '%{http_code} %{redirect_url}' -d "_csrf=$CSRF_ADMIN&estado=fuera_de_servicio" http://localhost:3000/admin/equipos/1/estado
+    -> HTTP 303 http://localhost:3000/admin/equipos
+
+$ curl -s -b admin.txt -o /dev/null -w '%{http_code}' -d 'estado=operativo' http://localhost:3000/admin/equipos/1/estado   (sin token CSRF)
+    -> HTTP 403
+
+$ curl -s -b admin.txt -o /dev/null -w '%{http_code}' http://localhost:3000/admin/reservas
+    -> HTTP 200
+
+$ curl -s -b admin.txt -c admin.txt -o /dev/null -w '%{http_code} %{redirect_url}' -d "_csrf=$CSRF_ADMIN" http://localhost:3000/admin/reservas/2/cancelar
+    -> HTTP 303 http://localhost:3000/admin/reservas
+
+$ for i in $(seq 1 11); do curl -s -o /dev/null -w '%{http_code} ' -d 'email=x@example.com&password=mala' http://localhost:3000/login; done
+    -> 401 401 401 401 401 401 401 401 401 429 429 
